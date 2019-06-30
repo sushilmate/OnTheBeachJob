@@ -19,6 +19,11 @@ namespace OnTheBeachJob.ConsoleUI
             if (validationResult)
                 return string.Empty;
 
+            validationResult = Validator.IsValidInputPattern(args);
+
+            if (!validationResult)
+                return string.Empty;
+
             return "Non empty o/p";
         }
     }

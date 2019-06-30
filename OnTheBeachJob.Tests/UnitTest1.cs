@@ -45,5 +45,31 @@ namespace OnTheBeachJob.Tests
             //Assert
             Assert.True(result == string.Empty);
         }
+
+        [Fact]
+        public void TestIfInputStringsWithOneParenthesisValid()
+        {
+            var validator = new Validator();
+
+            var onTheBeachJob = new OnTheBeachJobStarter(validator);
+
+            var result = onTheBeachJob.Run(new string[] { "a => " });
+
+            //Assert
+            Assert.True(result != string.Empty);
+        }
+
+        [Fact]
+        public void TestIfInputStringsWithTwoParenthesisValid()
+        {
+            var validator = new Validator();
+
+            var onTheBeachJob = new OnTheBeachJobStarter(validator);
+
+            var result = onTheBeachJob.Run(new string[] { "a => b" });
+
+            //Assert
+            Assert.True(result != string.Empty);
+        }
     }
 }
