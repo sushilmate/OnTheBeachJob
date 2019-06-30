@@ -4,7 +4,7 @@ using Xunit;
 
 namespace OnTheBeachJob.Tests
 {
-    public class UnitTest1
+    public class OnTheBeachJobStarterTests
     {
         [Fact]
         public void TestEmptyInputItemReturnsEmptyOutput()
@@ -72,5 +72,35 @@ namespace OnTheBeachJob.Tests
             Assert.True(result != string.Empty);
             Assert.True(result == "ba");
         }
+
+
+        [Fact]
+        public void TestIfInputStringsWithMultipleParenthesisValid()
+        {
+            var validator = new Validator();
+
+            var onTheBeachJob = new OnTheBeachJobStarter(validator);
+
+            var result = onTheBeachJob.Run(new string[] { "a => ", "b => ", "c => "});
+
+            //Assert
+            Assert.True(result != string.Empty);
+            Assert.True(result == "abc");
+        }
+
+        [Fact]
+        public void TestJobsWithDependantJobIsValid()
+        {
+            var validator = new Validator();
+
+            var onTheBeachJob = new OnTheBeachJobStarter(validator);
+
+            var result = onTheBeachJob.Run(new string[] { "a => ", "b => c", "c => " });
+
+            //Assert
+            Assert.True(result != string.Empty);
+            Assert.True(result == "acb");
+        }
+
     }
 }

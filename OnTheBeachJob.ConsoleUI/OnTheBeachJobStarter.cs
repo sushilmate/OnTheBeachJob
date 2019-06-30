@@ -54,7 +54,8 @@ namespace OnTheBeachJob.ConsoleUI
                     }
                     else
                     {
-                        listNode = list.AddAfter(listNode, jobs[0]);
+                        if (!list.Contains(jobs[0]))
+                            listNode = list.AddAfter(listNode, jobs[0]);
                     }
                 }
 
