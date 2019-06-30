@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.28922.388
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnTheBeachJob.ConsoleUI", "OnTheBeachJob.ConsoleUI\OnTheBeachJob.ConsoleUI.csproj", "{0BA913E7-7A3E-48F0-940B-5670B95FD5C4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnTheBeachJob.Tests", "OnTheBeachJob.Tests\OnTheBeachJob.Tests.csproj", "{0D9B3416-8DD7-4A10-9471-BC0FDA7EEAEC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{0BA913E7-7A3E-48F0-940B-5670B95FD5C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0BA913E7-7A3E-48F0-940B-5670B95FD5C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0BA913E7-7A3E-48F0-940B-5670B95FD5C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D9B3416-8DD7-4A10-9471-BC0FDA7EEAEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D9B3416-8DD7-4A10-9471-BC0FDA7EEAEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D9B3416-8DD7-4A10-9471-BC0FDA7EEAEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D9B3416-8DD7-4A10-9471-BC0FDA7EEAEC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

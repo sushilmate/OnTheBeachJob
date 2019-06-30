@@ -3,5 +3,5 @@
 ################################################################################
 
 /.vs/*
-/OnTheBeachJob.ConsoleUI/obj
-/OnTheBeachJob.ConsoleUI/bin
+/OnTheBeachJob.*/obj
+/OnTheBeachJob.*/bin
