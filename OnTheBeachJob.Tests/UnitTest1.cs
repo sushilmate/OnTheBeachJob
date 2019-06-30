@@ -1,7 +1,6 @@
-using System;
-using Xunit;
 using OnTheBeachJob.ConsoleUI;
 using OnTheBeachJob.ConsoleUI.Validation;
+using Xunit;
 
 namespace OnTheBeachJob.Tests
 {
@@ -57,6 +56,7 @@ namespace OnTheBeachJob.Tests
 
             //Assert
             Assert.True(result != string.Empty);
+            Assert.True(result == "a");
         }
 
         [Fact]
@@ -70,6 +70,7 @@ namespace OnTheBeachJob.Tests
 
             //Assert
             Assert.True(result != string.Empty);
+            Assert.True(result == "ba");
         }
     }
 }
