@@ -1,6 +1,7 @@
 using System;
 using Xunit;
 using OnTheBeachJob.ConsoleUI;
+using OnTheBeachJob.ConsoleUI.Validation;
 
 namespace OnTheBeachJob.Tests
 {
@@ -9,7 +10,9 @@ namespace OnTheBeachJob.Tests
         [Fact]
         public void TestEmptyInputReturnsEmptyOutput()
         {
-            var onTheBeachJob = new OnTheBeachJobStarter();
+            var validator = new Validator();
+
+            var onTheBeachJob = new OnTheBeachJobStarter(validator);
 
             var result = onTheBeachJob.Run(new string[] { "" });
 
