@@ -29,15 +29,16 @@ namespace OnTheBeachJob.ConsoleUI.Validation
         /// <returns>True if valid input/s, false if not</returns>
         public bool IsValidInputPattern(string[] inputs)
         {
-            //if (inputs == null || inputs.Length == 0 || inputs.All(x => string.IsNullOrWhiteSpace(x)))
-            //{
-            //    return true;
-            //}
-            //return false;
-            var result = Regex.IsMatch(inputs[0], "[a-zA-Z]+ => [a-zA-Z]*");
+            var result = false;
 
+            foreach (var item in inputs)
+            {
+                result = Regex.IsMatch(inputs[0], "[a-zA-Z]+ => [a-zA-Z]*");
+                //Break the loop, found invalid input
+                if (!result)
+                    return result;
+            }
             return result;
-
         }
     }
 }
