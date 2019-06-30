@@ -25,6 +25,11 @@ namespace OnTheBeachJob.ConsoleUI
             if (!validationResult)
                 return string.Empty;
 
+            validationResult = Validator.AreInputJobsSelfJoined(args);
+
+            if (validationResult)
+                return "Error Self Joined Present in the input";
+
             var list = new LinkedList<string>();
             LinkedListNode<string> listNode = new LinkedListNode<string>("");
 

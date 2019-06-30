@@ -33,12 +33,24 @@ namespace OnTheBeachJob.ConsoleUI.Validation
 
             foreach (var item in inputs)
             {
-                result = Regex.IsMatch(inputs[0], "[a-zA-Z]+ => [a-zA-Z]*");
+                result = Regex.IsMatch(item, "[a-zA-Z]+ => [a-zA-Z]*");
                 //Break the loop, found invalid input
                 if (!result)
                     return result;
             }
             return result;
+        }
+
+        public bool AreInputJobsSelfJoined(string[] inputs)
+        {
+            foreach (var item in inputs)
+            {
+                var jobs = Regex.Split(item, "=>", RegexOptions.IgnorePatternWhitespace);
+                //Break the loop, found self joined input
+                if (jobs.Length == 2 && jobs[0].Trim() == jobs[1].Trim())
+                    return true;
+            }
+            return false;
         }
     }
 }
