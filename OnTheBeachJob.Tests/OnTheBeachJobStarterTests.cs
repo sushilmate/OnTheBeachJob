@@ -7,14 +7,17 @@ namespace OnTheBeachJob.Tests
 {
     public class OnTheBeachJobStarterTests
     {
+        public OnTheBeachJobStarterTests()
+        {
+            OnTheBeachJob = new OnTheBeachJobStarter(new Validator());
+        }
+
+        internal OnTheBeachJobStarter OnTheBeachJob { get; }
+
         [Fact]
         public void TestEmptyInputItemReturnsEmptyOutput()
         {
-            var validator = new Validator();
-
-            var onTheBeachJob = new OnTheBeachJobStarter(validator);
-
-            var result = onTheBeachJob.Run(new string[] { "" });
+            var result = OnTheBeachJob.Run(new string[] { "" });
 
             //Assert
             Assert.True(result == string.Empty);
@@ -23,11 +26,7 @@ namespace OnTheBeachJob.Tests
         [Fact]
         public void TestNullInputReturnsEmptyOutput()
         {
-            var validator = new Validator();
-
-            var onTheBeachJob = new OnTheBeachJobStarter(validator);
-
-            var result = onTheBeachJob.Run(null);
+            var result = OnTheBeachJob.Run(null);
 
             //Assert
             Assert.True(result == string.Empty);
@@ -36,11 +35,7 @@ namespace OnTheBeachJob.Tests
         [Fact]
         public void TestEmptyInputReturnsEmptyOutput()
         {
-            var validator = new Validator();
-
-            var onTheBeachJob = new OnTheBeachJobStarter(validator);
-
-            var result = onTheBeachJob.Run(new string[0]);
+            var result = OnTheBeachJob.Run(new string[0]);
 
             //Assert
             Assert.True(result == string.Empty);
@@ -49,11 +44,7 @@ namespace OnTheBeachJob.Tests
         [Fact]
         public void TestIfInputStringsWithOneParenthesisValid()
         {
-            var validator = new Validator();
-
-            var onTheBeachJob = new OnTheBeachJobStarter(validator);
-
-            var result = onTheBeachJob.Run(new string[] { "a => " });
+            var result = OnTheBeachJob.Run(new string[] { "a => " });
 
             //Assert
             Assert.True(result != string.Empty);
@@ -63,11 +54,7 @@ namespace OnTheBeachJob.Tests
         [Fact]
         public void TestIfInputStringsWithTwoParenthesisValid()
         {
-            var validator = new Validator();
-
-            var onTheBeachJob = new OnTheBeachJobStarter(validator);
-
-            var result = onTheBeachJob.Run(new string[] { "a => b" });
+            var result = OnTheBeachJob.Run(new string[] { "a => b" });
 
             //Assert
             Assert.True(result != string.Empty);
@@ -78,11 +65,7 @@ namespace OnTheBeachJob.Tests
         [Fact]
         public void TestIfInputStringsWithMultipleParenthesisValid()
         {
-            var validator = new Validator();
-
-            var onTheBeachJob = new OnTheBeachJobStarter(validator);
-
-            var result = onTheBeachJob.Run(new string[] { "a => ", "b => ", "c => " });
+            var result = OnTheBeachJob.Run(new string[] { "a => ", "b => ", "c => " });
 
             //Assert
             Assert.True(result != string.Empty);
@@ -92,11 +75,7 @@ namespace OnTheBeachJob.Tests
         [Fact]
         public void TestJobsWithDependantJobIsValid()
         {
-            var validator = new Validator();
-
-            var onTheBeachJob = new OnTheBeachJobStarter(validator);
-
-            var result = onTheBeachJob.Run(new string[] { "a => ", "b => c", "c => " });
+            var result = OnTheBeachJob.Run(new string[] { "a => ", "b => c", "c => " });
 
             //Assert
             Assert.True(result != string.Empty);
@@ -106,12 +85,8 @@ namespace OnTheBeachJob.Tests
         [Fact]
         public void TestJobsWithSelfJoined()
         {
-            var validator = new Validator();
-
-            var onTheBeachJob = new OnTheBeachJobStarter(validator);
-
             //Act
-            void act() => onTheBeachJob.Run(new string[] { "a => ", "b => c", "c => c" });
+            void act() => OnTheBeachJob.Run(new string[] { "a => ", "b => c", "c => c" });
 
             //Assert
             Assert.Throws<ArgumentException>(act);
@@ -120,11 +95,7 @@ namespace OnTheBeachJob.Tests
         [Fact]
         public void TestJobsWithDependantJobIsValid2()
         {
-            var validator = new Validator();
-
-            var onTheBeachJob = new OnTheBeachJobStarter(validator);
-
-            var result = onTheBeachJob.Run(new string[] 
+            var result = OnTheBeachJob.Run(new string[]
             { "a => ", "b => c", "c => f", "d => a", "e => b", "f => " });
 
             //Assert
@@ -132,16 +103,11 @@ namespace OnTheBeachJob.Tests
             Assert.True(result == "adfcbe");
         }
 
-
         [Fact]
         public void TestJobsWithCircularReference()
         {
-            var validator = new Validator();
-
-            var onTheBeachJob = new OnTheBeachJobStarter(validator);
-
             //Act
-            void act() => onTheBeachJob.Run(new string[]
+            void act() => OnTheBeachJob.Run(new string[]
             { "a => ", "b => c", "c => f", "d => a", "e => b", "f => b" });
 
             //Assert

@@ -1,7 +1,7 @@
-﻿using OnTheBeachJob.ConsoleUI.Validation;
+﻿using OnTheBeachJob.ConsoleUI.Extensions;
+using OnTheBeachJob.ConsoleUI.Validation;
 using System;
 using System.Collections.Generic;
-using OnTheBeachJob.ConsoleUI.Extensions;
 
 namespace OnTheBeachJob.ConsoleUI
 {
@@ -32,16 +32,16 @@ namespace OnTheBeachJob.ConsoleUI
                 throw new ArgumentException("Self Joined Present in the input");
 
             var sequencedJobs = new LinkedList<string>();
-            
+
             foreach (var item in args)
             {
                 var jobs = Parse(item);
-                if(sequencedJobs.Count == 0)
+                if (sequencedJobs.Count == 0)
                 {
                     sequencedJobs.AppendRange(jobs);
                     continue; // found first node for the list move to next.
                 }
-                if(jobs.Count == 1)
+                if (jobs.Count == 1)
                 {
                     if (!sequencedJobs.Contains(jobs[0]))
                         sequencedJobs.AddLast(jobs[0]);
@@ -81,7 +81,7 @@ namespace OnTheBeachJob.ConsoleUI
             // spiltting the string & removing empty entries
             var jobs = item.Split(" => ", StringSplitOptions.RemoveEmptyEntries);
             // Adding dependent job first then next job
-            for (int i = jobs.Length -1; i >= 0; i--)
+            for (int i = jobs.Length - 1; i >= 0; i--)
             {
                 jobList.Add(jobs[i]);
             }
