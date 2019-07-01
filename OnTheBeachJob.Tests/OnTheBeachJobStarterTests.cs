@@ -1,6 +1,6 @@
 using OnTheBeachJob.ConsoleUI;
+using OnTheBeachJob.ConsoleUI.ErrorMessages;
 using OnTheBeachJob.ConsoleUI.Validation;
-using System;
 using Xunit;
 
 namespace OnTheBeachJob.Tests
@@ -63,7 +63,7 @@ namespace OnTheBeachJob.Tests
 
 
         [Fact]
-        public void TestIfInputStringsWithMultipleParenthesisValid()
+        public void TestInputWithMultipleParenthesisValid()
         {
             var result = OnTheBeachJob.Run(new string[] { "a => ", "b => ", "c => " });
 
@@ -86,10 +86,10 @@ namespace OnTheBeachJob.Tests
         public void TestJobsWithSelfJoined()
         {
             //Act
-            void act() => OnTheBeachJob.Run(new string[] { "a => ", "b => c", "c => c" });
+            var result = OnTheBeachJob.Run(new string[] { "a => ", "b => c", "c => c" });
 
             //Assert
-            Assert.Throws<ArgumentException>(act);
+            Assert.True(result == ErrorMessage.SelfJoinedErrorMessage);
         }
 
         [Fact]
@@ -107,11 +107,11 @@ namespace OnTheBeachJob.Tests
         public void TestJobsWithCircularReference()
         {
             //Act
-            void act() => OnTheBeachJob.Run(new string[]
+            var result = OnTheBeachJob.Run(new string[]
             { "a => ", "b => c", "c => f", "d => a", "e => b", "f => b" });
 
             //Assert
-            Assert.Throws<ArgumentException>(act);
+            Assert.True(result == ErrorMessage.CircularErrorMessage);
         }
     }
 }

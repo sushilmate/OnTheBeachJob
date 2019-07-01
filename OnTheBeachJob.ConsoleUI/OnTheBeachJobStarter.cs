@@ -1,4 +1,5 @@
-﻿using OnTheBeachJob.ConsoleUI.Extensions;
+﻿using OnTheBeachJob.ConsoleUI.Enums;
+using OnTheBeachJob.ConsoleUI.Extensions;
 using OnTheBeachJob.ConsoleUI.Validation;
 using System;
 using System.Collections.Generic;
@@ -10,26 +11,24 @@ namespace OnTheBeachJob.ConsoleUI
         public OnTheBeachJobStarter(IValidator validator)
         {
             this.Validator = validator;
+
+            // Rule to Validate Input
+            this.Validator.AddInputRule(ValidationRuleType.IsEmpty);
+            this.Validator.AddInputRule(ValidationRuleType.IsValidInputPattern);
+            this.Validator.AddInputRule(ValidationRuleType.AreInputJobsSelfJoined);
+
+            // Rule to Validate Output
+            this.Validator.AddOutputRule(ValidationRuleType.CheckCircularReference);
         }
 
         internal IValidator Validator { get; }
 
         public string Run(string[] args)
         {
-            var validationResult = Validator.IsEmpty(args);
+            var IsInValid = Validator.ValidateInput(args);
 
-            if (validationResult)
-                return string.Empty;
-
-            validationResult = Validator.IsValidInputPattern(args);
-
-            if (!validationResult)
-                return string.Empty;
-
-            validationResult = Validator.AreInputJobsSelfJoined(args);
-
-            if (validationResult)
-                throw new ArgumentException("Self Joined Present in the input");
+            if (IsInValid)
+                return Validator.ValidationError;
 
             var sequencedJobs = new LinkedList<string>();
 
@@ -64,8 +63,10 @@ namespace OnTheBeachJob.ConsoleUI
 
             var orderedJobs = OrderByAsc(sequencedJobs);
 
-            if (Validator.CheckCircularReference(orderedJobs))
-                throw new ArgumentException("The given jobs has circular reference.");
+            IsInValid = Validator.ValidateOutput(orderedJobs);
+
+            if (IsInValid)
+                return Validator.ValidationError;
 
             return orderedJobs;
         }

@@ -1,10 +1,14 @@
-﻿namespace OnTheBeachJob.ConsoleUI.Validation
+﻿using OnTheBeachJob.ConsoleUI.Enums;
+
+namespace OnTheBeachJob.ConsoleUI.Validation
 {
     public interface IValidator
     {
-        bool IsEmpty(string[] inputs);
-        bool IsValidInputPattern(string[] inputs);
-        bool AreInputJobsSelfJoined(string[] args);
-        bool CheckCircularReference(string orderedJobs);
+        string ValidationError { get; }
+
+        void AddInputRule(ValidationRuleType validationRule);
+        void AddOutputRule(ValidationRuleType validationRule);
+        bool ValidateInput(string[] input);
+        bool ValidateOutput(string output);
     }
 }
