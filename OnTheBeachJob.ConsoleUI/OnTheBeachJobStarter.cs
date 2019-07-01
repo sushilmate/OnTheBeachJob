@@ -1,6 +1,7 @@
 ﻿using OnTheBeachJob.ConsoleUI.Validation;
 using System;
 using System.Collections.Generic;
+using OnTheBeachJob.ConsoleUI.Extensions;
 
 namespace OnTheBeachJob.ConsoleUI
 {
@@ -30,53 +31,39 @@ namespace OnTheBeachJob.ConsoleUI
             if (validationResult)
                 return "Error Self Joined Present in the input";
 
-            var list = new LinkedList<string>();
-            LinkedListNode<string> listNode = new LinkedListNode<string>("");
-
+            var sequencedJobs = new LinkedList<string>();
+            //LinkedListNode<string> currentNode = new LinkedListNode<string>("");
+            
             foreach (var item in args)
             {
-                var jobs = ParseInputToJobs(item);
-                // if have dependant jobs
-                if (jobs.Length == 2)
+                var jobs = Parse(item);
+                if(sequencedJobs.Count == 0)
                 {
-                    // Check if the list is empty
-                    if (list.Count == 0)
-                    {
-                        listNode = list.AddFirst(jobs[1]);
-                    }
-                    else
-                    {
-                        listNode = list.AddAfter(listNode, jobs[1]);
-                    }
-                    list.AddAfter(listNode, jobs[0]);
+                    sequencedJobs.AppendRange(jobs);
+                    continue; // found first node for the list move to next.
                 }
-                else
+                if(jobs.Count == 1)
                 {
-                    // still checking if the list is empty
-                    if (list.Count == 0)
-                    {
-                        listNode = list.AddFirst(jobs[0]);
-                    }
-                    else
-                    {
-                        if (!list.Contains(jobs[0]))
-                            listNode = list.AddAfter(listNode, jobs[0]);
-                    }
+                    if (!sequencedJobs.Contains(jobs[0]))
+                        sequencedJobs.AddLast(jobs[0]);
+                    continue;
                 }
-
+                if (sequencedJobs.Contains(jobs[0]))
+                {
+                    var currentNode = sequencedJobs.Find(jobs[0]);
+                    sequencedJobs.AddAfter(currentNode, jobs[1]);
+                    continue;
+                }
+                if (sequencedJobs.Contains(jobs[1]))
+                {
+                    var currentNode = sequencedJobs.Find(jobs[1]);
+                    sequencedJobs.AddBefore(currentNode, jobs[0]);
+                    continue;
+                }
+                sequencedJobs.AppendRange(jobs);
             }
 
-            return SerilizeList(list);
-        }
-
-        private string SerilizeList(LinkedList<string> list)
-        {
-            var result = string.Empty;
-            foreach (var item in list)
-            {
-                result += item;
-            }
-            return result;
+            return OrderByAsc(sequencedJobs);
         }
 
         /// <summary>
@@ -84,10 +71,32 @@ namespace OnTheBeachJob.ConsoleUI
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        private string[] ParseInputToJobs(string item)
+        private List<string> Parse(string item)
         {
+            var jobList = new List<string>();
             // spiltting the string & removing empty entries
-            return item.Split(" => ", StringSplitOptions.RemoveEmptyEntries);
+            var jobs = item.Split(" => ", StringSplitOptions.RemoveEmptyEntries);
+            // Adding dependent job first then next job
+            for (int i = jobs.Length -1; i >= 0; i--)
+            {
+                jobList.Add(jobs[i]);
+            }
+            return jobList;
+        }
+
+        /// <summary>
+        /// This will order the list from first to last element and returns the elements in a string format
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        private string OrderByAsc(LinkedList<string> list)
+        {
+            var result = string.Empty;
+            foreach (var item in list)
+            {
+                result += item;
+            }
+            return result;
         }
     }
 }

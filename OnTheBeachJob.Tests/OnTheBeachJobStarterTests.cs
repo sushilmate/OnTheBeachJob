@@ -115,5 +115,19 @@ namespace OnTheBeachJob.Tests
             Assert.True(result == "Error Self Joined Present in the input");
         }
 
+        [Fact]
+        public void TestJobsWithDependantJobIsValid2()
+        {
+            var validator = new Validator();
+
+            var onTheBeachJob = new OnTheBeachJobStarter(validator);
+
+            var result = onTheBeachJob.Run(new string[] 
+            { "a => ", "b => c", "c => f", "d => a", "e => b", "f => " });
+
+            //Assert
+            Assert.True(result != string.Empty);
+            Assert.True(result == "adfcbe");
+        }
     }
 }
