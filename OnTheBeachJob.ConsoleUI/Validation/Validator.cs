@@ -52,5 +52,17 @@ namespace OnTheBeachJob.ConsoleUI.Validation
             }
             return false;
         }
+
+        /// <summary>
+        /// Check if the string has circular reference
+        /// </summary>
+        /// <param name="orderedJobs"></param>
+        /// <returns></returns>
+        public bool CheckCircularReference(string orderedJobs)
+        {
+            // if the character repeats in the list that means we got the ciruclar reference.
+            var repeatedChars = orderedJobs.ToCharArray().GroupBy(x => x).Where(y => y.Count() > 1).Select(z => z.Key).ToList();
+            return repeatedChars.Count > 0;
+        }
     }
 }

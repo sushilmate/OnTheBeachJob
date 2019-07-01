@@ -1,5 +1,6 @@
 using OnTheBeachJob.ConsoleUI;
 using OnTheBeachJob.ConsoleUI.Validation;
+using System;
 using Xunit;
 
 namespace OnTheBeachJob.Tests
@@ -109,10 +110,11 @@ namespace OnTheBeachJob.Tests
 
             var onTheBeachJob = new OnTheBeachJobStarter(validator);
 
-            var result = onTheBeachJob.Run(new string[] { "a => ", "b => c", "c => c" });
+            //Act
+            void act() => onTheBeachJob.Run(new string[] { "a => ", "b => c", "c => c" });
 
             //Assert
-            Assert.True(result == "Error Self Joined Present in the input");
+            Assert.Throws<ArgumentException>(act);
         }
 
         [Fact]
@@ -128,6 +130,22 @@ namespace OnTheBeachJob.Tests
             //Assert
             Assert.True(result != string.Empty);
             Assert.True(result == "adfcbe");
+        }
+
+
+        [Fact]
+        public void TestJobsWithCircularReference()
+        {
+            var validator = new Validator();
+
+            var onTheBeachJob = new OnTheBeachJobStarter(validator);
+
+            //Act
+            void act() => onTheBeachJob.Run(new string[]
+            { "a => ", "b => c", "c => f", "d => a", "e => b", "f => b" });
+
+            //Assert
+            Assert.Throws<ArgumentException>(act);
         }
     }
 }

@@ -29,10 +29,9 @@ namespace OnTheBeachJob.ConsoleUI
             validationResult = Validator.AreInputJobsSelfJoined(args);
 
             if (validationResult)
-                return "Error Self Joined Present in the input";
+                throw new ArgumentException("Self Joined Present in the input");
 
             var sequencedJobs = new LinkedList<string>();
-            //LinkedListNode<string> currentNode = new LinkedListNode<string>("");
             
             foreach (var item in args)
             {
@@ -63,7 +62,12 @@ namespace OnTheBeachJob.ConsoleUI
                 sequencedJobs.AppendRange(jobs);
             }
 
-            return OrderByAsc(sequencedJobs);
+            var orderedJobs = OrderByAsc(sequencedJobs);
+
+            if (Validator.CheckCircularReference(orderedJobs))
+                throw new ArgumentException("The given jobs has circular reference.");
+
+            return orderedJobs;
         }
 
         /// <summary>
