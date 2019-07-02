@@ -26,7 +26,7 @@ namespace OnTheBeachJob.ConsoleUI.Validation
         /// <returns>True if valid input/s, false if not</returns>
         private bool IsEmpty(string[] inputs)
         {
-            if (inputs == null || inputs.Length == 0 || inputs.All(x => string.IsNullOrWhiteSpace(x)))
+            if (inputs == null || inputs.Length == 0 || inputs.All(string.IsNullOrWhiteSpace))
             {
                 ValidationError = string.Empty;
                 return true;
@@ -42,7 +42,7 @@ namespace OnTheBeachJob.ConsoleUI.Validation
         /// </summary>
         /// <param name="inputs"></param>
         /// <returns>True if valid input/s, false if not</returns>
-        private bool IsInvalidInputPattern(string[] inputs)
+        private bool IsInvalidInputPattern(IEnumerable<string> inputs)
         {
             foreach (string item in inputs)
             {
@@ -57,7 +57,7 @@ namespace OnTheBeachJob.ConsoleUI.Validation
             return false;
         }
 
-        private bool AreInputJobsSelfJoined(string[] inputs)
+        private bool AreInputJobsSelfJoined(IEnumerable<string> inputs)
         {
             foreach (string item in inputs)
             {
@@ -77,11 +77,11 @@ namespace OnTheBeachJob.ConsoleUI.Validation
         /// </summary>
         /// <param name="orderedJobs"></param>
         /// <returns></returns>
-        private bool CheckCircularReference(string[] orderedJobs)
+        private bool CheckCircularReference(IEnumerable<string> orderedJobs)
         {
             foreach (string item in orderedJobs)
             {
-                // if the character repeats in the list that means we got the ciruclar reference.
+                // if the character repeats in the list that means we got the circular reference.
                 List<char> repeatedChars = item.ToCharArray().GroupBy(x => x).Where(y => y.Count() > 1).Select(z => z.Key).ToList();
                 if (repeatedChars.Count > 0)
                 {
@@ -112,7 +112,7 @@ namespace OnTheBeachJob.ConsoleUI.Validation
             return Validate(OutputRules, output);
         }
 
-        private bool Validate(List<ValidationRuleType> rules, string[] input)
+        private bool Validate(IEnumerable<ValidationRuleType> rules, string[] input)
         {
             // Clear out the errors before processing it.
             ValidationError = string.Empty;

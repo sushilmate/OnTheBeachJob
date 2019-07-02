@@ -3,11 +3,16 @@ using OnTheBeachJob.ConsoleUI.Extensions;
 using OnTheBeachJob.ConsoleUI.Validation;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OnTheBeachJob.ConsoleUI
 {
     public class OnTheBeachJobStarter
     {
+        public OnTheBeachJobStarter()
+        {
+        }
+
         public OnTheBeachJobStarter(IValidator validator)
         {
             Validator = validator;
@@ -25,9 +30,9 @@ namespace OnTheBeachJob.ConsoleUI
 
         public string Run(string[] args)
         {
-            bool IsInValid = Validator.ValidateInput(args);
+            bool isInValid = Validator.ValidateInput(args);
 
-            if (IsInValid)
+            if (isInValid)
             {
                 return Validator.ValidationError;
             }
@@ -63,25 +68,20 @@ namespace OnTheBeachJob.ConsoleUI
 
             string orderedJobs = OrderByAsc(sequencedJobs);
 
-            IsInValid = Validator.ValidateOutput(new string[] { orderedJobs });
+            isInValid = Validator.ValidateOutput(new string[] { orderedJobs });
 
-            if (IsInValid)
-            {
-                return Validator.ValidationError;
-            }
-
-            return orderedJobs;
+            return isInValid ? Validator.ValidationError : orderedJobs;
         }
 
         /// <summary>
-        /// Parsing input string into dependant jobs if any
+        /// Parsing input string into dependent jobs if any
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        private List<string> Parse(string item)
+        private static List<string> Parse(string item)
         {
             List<string> jobList = new List<string>();
-            // spiltting the string & removing empty entries
+            // splitting the string & removing empty entries
             string[] jobs = item.Split(" => ", StringSplitOptions.RemoveEmptyEntries);
             // Adding dependent job first then next job
             for (int i = jobs.Length - 1; i >= 0; i--)
@@ -96,14 +96,9 @@ namespace OnTheBeachJob.ConsoleUI
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        private string OrderByAsc(LinkedList<string> list)
+        private static string OrderByAsc(IEnumerable<string> list)
         {
-            string result = string.Empty;
-            foreach (string item in list)
-            {
-                result += item;
-            }
-            return result;
+            return list.Aggregate(string.Empty, (current, item) => current + item);
         }
     }
 }

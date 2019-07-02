@@ -11,26 +11,36 @@ namespace OnTheBeachJob.ConsoleUI
             try
             {
                 // create service collection
-                ServiceCollection serviceCollection = new ServiceCollection();
+                IServiceCollection serviceCollection = new ServiceCollection();
                 ConfigureServices(serviceCollection);
 
                 // create service provider
                 ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
 
+                // Add custom input if empty for demo purpose.
+                if (args.Length == 0)
+                {
+                    args = new string[] { "a => ", "b => c", "c => f", "d => a", "e => b", "f => " };
+                }
+
                 // entry to run app
                 string result = serviceProvider.GetService<OnTheBeachJobStarter>().Run(args);
 
                 Console.WriteLine(result);
+
+                Console.ReadLine();
             }
             catch (Exception ex)
             {
-                Console.WriteLine(string.Format("Exception caught in Main function Reason: {0}", ex.Message));
+                Console.WriteLine($"Exception caught in Main function Reason: {ex.Message}");
             }
         }
 
-        private static void ConfigureServices(ServiceCollection serviceCollection)
+        private static void ConfigureServices(IServiceCollection serviceCollection)
         {
             serviceCollection.AddSingleton<IValidator, Validator>();
+            // add app
+            serviceCollection.AddTransient<OnTheBeachJobStarter>();
         }
     }
 }
