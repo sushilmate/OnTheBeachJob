@@ -18,9 +18,9 @@ dependency, the position of a in the final sequence does not matter.
     
 1) Given you’re passed an empty string (no jobs), the result should be an empty sequence.
 Given the following job structure:
-
-```a => 
-```
+<BR> a =>
+<BR>
+   
 The result should be a sequence consisting of a single job a.
 <BR>
 <BR>
