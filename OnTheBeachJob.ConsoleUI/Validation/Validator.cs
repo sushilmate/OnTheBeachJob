@@ -14,16 +14,17 @@ namespace OnTheBeachJob.ConsoleUI.Validation
 
         public Validator()
         {
-            this.InputRules = new List<ValidationRuleType>();
-            this.OutputRules = new List<ValidationRuleType>();
-            this.ValidationError = string.Empty;
+            InputRules = new List<ValidationRuleType>();
+            OutputRules = new List<ValidationRuleType>();
+            ValidationError = string.Empty;
         }
+
         /// <summary>
         /// This will check if the collection is null or zero element or elements with empty string
         /// </summary>
         /// <param name="inputs"></param>
         /// <returns>True if valid input/s, false if not</returns>
-        public bool IsEmpty(string[] inputs)
+        private bool IsEmpty(string[] inputs)
         {
             if (inputs == null || inputs.Length == 0 || inputs.All(x => string.IsNullOrWhiteSpace(x)))
             {
@@ -41,11 +42,11 @@ namespace OnTheBeachJob.ConsoleUI.Validation
         /// </summary>
         /// <param name="inputs"></param>
         /// <returns>True if valid input/s, false if not</returns>
-        public bool IsInvalidInputPattern(string[] inputs)
+        private bool IsInvalidInputPattern(string[] inputs)
         {
-            foreach (var item in inputs)
+            foreach (string item in inputs)
             {
-                var result = Regex.IsMatch(item, "[a-zA-Z]+ => [a-zA-Z]*");
+                bool result = Regex.IsMatch(item, "[a-zA-Z]+ => [a-zA-Z]*");
                 //Break the loop, found invalid input
                 if (!result)
                 {
@@ -56,11 +57,11 @@ namespace OnTheBeachJob.ConsoleUI.Validation
             return false;
         }
 
-        public bool AreInputJobsSelfJoined(string[] inputs)
+        private bool AreInputJobsSelfJoined(string[] inputs)
         {
-            foreach (var item in inputs)
+            foreach (string item in inputs)
             {
-                var jobs = Regex.Split(item, "=>", RegexOptions.IgnorePatternWhitespace);
+                string[] jobs = Regex.Split(item, "=>", RegexOptions.IgnorePatternWhitespace);
                 //Break the loop, found self joined input
                 if (jobs.Length == 2 && jobs[0].Trim() == jobs[1].Trim())
                 {
@@ -76,14 +77,17 @@ namespace OnTheBeachJob.ConsoleUI.Validation
         /// </summary>
         /// <param name="orderedJobs"></param>
         /// <returns></returns>
-        public bool CheckCircularReference(string orderedJobs)
+        private bool CheckCircularReference(string[] orderedJobs)
         {
-            // if the character repeats in the list that means we got the ciruclar reference.
-            var repeatedChars = orderedJobs.ToCharArray().GroupBy(x => x).Where(y => y.Count() > 1).Select(z => z.Key).ToList();
-            if (repeatedChars.Count > 0)
+            foreach (string item in orderedJobs)
             {
-                ValidationError = ErrorMessage.CircularErrorMessage;
-                return true;
+                // if the character repeats in the list that means we got the ciruclar reference.
+                List<char> repeatedChars = item.ToCharArray().GroupBy(x => x).Where(y => y.Count() > 1).Select(z => z.Key).ToList();
+                if (repeatedChars.Count > 0)
+                {
+                    ValidationError = ErrorMessage.CircularErrorMessage;
+                    return true;
+                }
             }
             return false;
         }
@@ -100,11 +104,21 @@ namespace OnTheBeachJob.ConsoleUI.Validation
 
         public bool ValidateInput(string[] input)
         {
+            return Validate(InputRules, input);
+        }
+
+        public bool ValidateOutput(string[] output)
+        {
+            return Validate(OutputRules, output);
+        }
+
+        private bool Validate(List<ValidationRuleType> rules, string[] input)
+        {
             // Clear out the errors before processing it.
             ValidationError = string.Empty;
-            var isInvalid = false;
+            bool isInvalid = false;
 
-            foreach (var item in InputRules)
+            foreach (ValidationRuleType item in rules)
             {
                 switch (item)
                 {
@@ -117,33 +131,16 @@ namespace OnTheBeachJob.ConsoleUI.Validation
                     case ValidationRuleType.AreInputJobsSelfJoined:
                         isInvalid = AreInputJobsSelfJoined(input);
                         break;
-                    default:
-                        break;
-                }
-                if (isInvalid)
-                    break; // breaking the loop as we got invalid input, no need to iterate further
-            }
-            return isInvalid;
-        }
-
-        public bool ValidateOutput(string output)
-        {
-            // Clear out the errors before processing it.
-            ValidationError = string.Empty;
-            var isInvalid = false;
-
-            foreach (var item in OutputRules)
-            {
-                switch (item)
-                {
                     case ValidationRuleType.CheckCircularReference:
-                        isInvalid = CheckCircularReference(output);
+                        isInvalid = CheckCircularReference(input);
                         break;
                     default:
                         break;
                 }
                 if (isInvalid)
+                {
                     break; // breaking the loop as we got invalid input, no need to iterate further
+                }
             }
             return isInvalid;
         }

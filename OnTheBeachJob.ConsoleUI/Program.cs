@@ -4,21 +4,21 @@ using System;
 
 namespace OnTheBeachJob.ConsoleUI
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             try
             {
                 // create service collection
-                var serviceCollection = new ServiceCollection();
+                ServiceCollection serviceCollection = new ServiceCollection();
                 ConfigureServices(serviceCollection);
 
                 // create service provider
-                var serviceProvider = serviceCollection.BuildServiceProvider();
+                ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
 
                 // entry to run app
-                var result = serviceProvider.GetService<OnTheBeachJobStarter>().Run(args);
+                string result = serviceProvider.GetService<OnTheBeachJobStarter>().Run(args);
 
                 Console.WriteLine(result);
             }

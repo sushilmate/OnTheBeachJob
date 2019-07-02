@@ -9,6 +9,6 @@ namespace OnTheBeachJob.ConsoleUI.Validation
         void AddInputRule(ValidationRuleType validationRule);
         void AddOutputRule(ValidationRuleType validationRule);
         bool ValidateInput(string[] input);
-        bool ValidateOutput(string output);
+        bool ValidateOutput(string[] output);
     }
 }

@@ -10,63 +10,65 @@ namespace OnTheBeachJob.ConsoleUI
     {
         public OnTheBeachJobStarter(IValidator validator)
         {
-            this.Validator = validator;
+            Validator = validator;
 
             // Rule to Validate Input
-            this.Validator.AddInputRule(ValidationRuleType.IsEmpty);
-            this.Validator.AddInputRule(ValidationRuleType.IsValidInputPattern);
-            this.Validator.AddInputRule(ValidationRuleType.AreInputJobsSelfJoined);
+            Validator.AddInputRule(ValidationRuleType.IsEmpty);
+            Validator.AddInputRule(ValidationRuleType.IsValidInputPattern);
+            Validator.AddInputRule(ValidationRuleType.AreInputJobsSelfJoined);
 
             // Rule to Validate Output
-            this.Validator.AddOutputRule(ValidationRuleType.CheckCircularReference);
+            Validator.AddOutputRule(ValidationRuleType.CheckCircularReference);
         }
 
         internal IValidator Validator { get; }
 
         public string Run(string[] args)
         {
-            var IsInValid = Validator.ValidateInput(args);
+            bool IsInValid = Validator.ValidateInput(args);
 
             if (IsInValid)
-                return Validator.ValidationError;
-
-            var sequencedJobs = new LinkedList<string>();
-
-            foreach (var item in args)
             {
-                var jobs = Parse(item);
-                if (sequencedJobs.Count == 0)
-                {
-                    sequencedJobs.AppendRange(jobs);
-                    continue; // found first node for the list move to next.
-                }
-                if (jobs.Count == 1)
+                return Validator.ValidationError;
+            }
+
+            LinkedList<string> sequencedJobs = new LinkedList<string>();
+
+            foreach (string item in args)
+            {
+                List<string> jobs = Parse(item);
+                if (jobs.Count == 1) // Non dependent job add if not added before
                 {
                     if (!sequencedJobs.Contains(jobs[0]))
+                    {
                         sequencedJobs.AddLast(jobs[0]);
+                    }
+
                     continue;
                 }
-                if (sequencedJobs.Contains(jobs[0]))
+                if (sequencedJobs.Contains(jobs[0])) // Added job found the dependency in iteration.
                 {
-                    var currentNode = sequencedJobs.Find(jobs[0]);
+                    LinkedListNode<string> currentNode = sequencedJobs.Find(jobs[0]);
                     sequencedJobs.AddAfter(currentNode, jobs[1]);
                     continue;
                 }
-                if (sequencedJobs.Contains(jobs[1]))
+                if (sequencedJobs.Contains(jobs[1]))  // New Dependent jobs found with already added item.
                 {
-                    var currentNode = sequencedJobs.Find(jobs[1]);
+                    LinkedListNode<string> currentNode = sequencedJobs.Find(jobs[1]);
                     sequencedJobs.AddBefore(currentNode, jobs[0]);
                     continue;
                 }
-                sequencedJobs.AppendRange(jobs);
+                sequencedJobs.AppendRange(jobs); // New Job with dependent Job. 
             }
 
-            var orderedJobs = OrderByAsc(sequencedJobs);
+            string orderedJobs = OrderByAsc(sequencedJobs);
 
-            IsInValid = Validator.ValidateOutput(orderedJobs);
+            IsInValid = Validator.ValidateOutput(new string[] { orderedJobs });
 
             if (IsInValid)
+            {
                 return Validator.ValidationError;
+            }
 
             return orderedJobs;
         }
@@ -78,9 +80,9 @@ namespace OnTheBeachJob.ConsoleUI
         /// <returns></returns>
         private List<string> Parse(string item)
         {
-            var jobList = new List<string>();
+            List<string> jobList = new List<string>();
             // spiltting the string & removing empty entries
-            var jobs = item.Split(" => ", StringSplitOptions.RemoveEmptyEntries);
+            string[] jobs = item.Split(" => ", StringSplitOptions.RemoveEmptyEntries);
             // Adding dependent job first then next job
             for (int i = jobs.Length - 1; i >= 0; i--)
             {
@@ -96,8 +98,8 @@ namespace OnTheBeachJob.ConsoleUI
         /// <returns></returns>
         private string OrderByAsc(LinkedList<string> list)
         {
-            var result = string.Empty;
-            foreach (var item in list)
+            string result = string.Empty;
+            foreach (string item in list)
             {
                 result += item;
             }
